@@ -1,0 +1,41 @@
+import random
+
+player_name = input("Enter your name: ")
+print(f"Hello, {player_name}")
+file = open('rating.txt', 'r')
+player_rating = str(0)
+for line in file:
+    if player_name in line:
+        player_rating = line.replace(player_name + ' ', '')
+file.close()
+
+options = input()
+if not options:
+    beats = [('rock', 'paper'), ('scissors', 'rock'), ('paper', 'scissors')]
+else:
+    options = options.split(',')
+    beats = []
+    for i in range(len(options)):
+        reindex = options[i:] + options[:i]
+        beats += [(reindex[0], reindex[j]) for j in range(1, (len(options)-1)//2 + 1)]
+
+print("Okay, let's start")
+
+while True:
+    user_choice = input()
+    computer_choice = random.choice(['rock', 'paper', 'scissors'])
+    if any((computer_choice, user_choice) == x for x in beats):
+        print(f"Well done. The computer chose {computer_choice} and failed")
+        player_rating = str(int(player_rating) + 100)
+    elif any((user_choice, computer_choice) == x for x in beats):
+        print(f"Sorry, but the computer chose {computer_choice}")
+    elif user_choice == computer_choice:
+        print(f"There is a draw ({user_choice})")
+        player_rating = str(int(player_rating) + 50)
+    elif user_choice == '!exit':
+        print("Bye!")
+        exit()
+    elif user_choice == '!rating':
+        print("Your rating:", player_rating)
+    else:
+        print("Invalid input")
